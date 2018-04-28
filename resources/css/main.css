@@ -1,0 +1,193 @@
+/*.background {
+    background-image: url(/resources/images/space.jpg);
+}*/
+input[type=text], input[type=checkbox], select, textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    margin: 5px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+.mobileBottom {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100vw;
+    z-index: 20;
+    background-color: #ffffff;
+    height: 60vh;
+    overflow: hidden;
+}
+
+.mobileBottom input{
+    height: 70px;
+}
+
+.mobileBottom input, .mobileBottom input[type=file], .mobileBottom select, .mobileBottom textarea {
+    width: 100%;
+}
+
+.mobileBottom input {
+    height: 85px;
+}
+
+.mobileBottom input, .mobileBottom textarea, .mobileBottom label {
+    font-size: 50px;
+    line-height: 1.3333;
+}
+
+.mobileBottom input[type=submit] {
+    height: 120px;
+    margin: 0px;
+}
+
+.mobileBottom input[type=file] {
+    /*height: 120px;*/
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+
+
+
+
+.map {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    z-index: -50;
+}
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 10ch;
+    white-space: nowrap;
+}
+.ol-popup:after, .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    /*height: 0;*/
+    /*width: 0;*/
+    position: absolute;
+    pointer-events: none;
+}
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+#add-marker {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#Marker-content {
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+#markerPhoto {
+    max-width: 200px;
+    max-height: 200px;
+}
+#addMarkerNsfwRow {
+    display: none;
+}
+#nsfwOverlay {
+    display: none;
+}
+
+
+
+#judgeButtons {
+    display: none;
+}
+#adminCommands {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#edit, #accept, #reject{
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+#accept {
+    background-color: #4CAF50;
+}
+#reject {
+    background-color: #AF504C;
+}
+#edit {
+    background-color: #FFCC66;
+}

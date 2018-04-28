@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>cuteboy.world</title>
+        <script src="resources/javascript/openlayers.js" type="text/javascript"></script>
+        <script type="text/javascript" src="resources/javascript/main.js"></script>
+        <link rel="stylesheet" type="text/css" href="resources/css/openlayers.css">
+        <link rel="stylesheet" type="text/css" href="resources/css/main.css">
+    </head>
+    <body>
+        <div id="map" class="map"></div>
+        <input type="button" value="Add marker" onclick="toggleAddMarker(this);" id="add-marker" >
+        <div id="adminCommands">
+            <input class="adminButton" type="button" command="0" value="show unprocessed" onclick="adminMarkers(this);" >
+            <input class="adminButton" type="button" command="2" value="show aproved" onclick="adminMarkers(this);">
+            <input class="adminButton" type="button" command="1" value="show rejected" onclick="adminMarkers(this);" >
+        </div>
+
+        <div id="MobileMarker" class="ol-popup"></div>
+        <div id="MobileAddMarker" class="ol-popup">Adding Marker</div>
+
+        <div id="Marker" class="ol-popup">
+            <div id="Marker-content">
+                <table>
+                    <tr>
+                       <td rowspan="5">
+                            <img src="/resources/images/nsfw.png" id="nsfwOverlay" onclick="showImg(this);">
+                            <img src="" id="markerPhoto">
+                       </td> 
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td id="markerName" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td id="markerEmail" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" id="markerText"></td>
+                    </tr>
+                    <tr id="judgeButtons">
+                        <td colspan="3">
+                            <button id="accept" onclick="procesMarker(this);" >ACCEPT</button>
+                            <button id="edit" onclick="procesMarker(this);" >EDIT</button>
+                            <button id="reject" onclick="procesMarker(this);" >REJECT</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="addMarker" class="ol-popup">
+            <div id="addMarker-content">
+                <form name="addMarker-form" method="POST" action="addMarker.php" enctype="multipart/form-data" onsubmit="checkForm();return false;">
+                    <input type="hidden" name="pos">
+                    <input id="addMarkerEdit" type="hidden" name="edit">
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="addMarkerName">Name:</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="addMarkerName" type="text" name="name" placeholder="Name" maxlength="64" required >
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="addMarkerEmail">Email:</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="addMarkerEmail" type="text" name="email" placeholder="Email" maxlength="64" required >
+                        </div>
+                    </div>
+
+                    <div class="row" id="addMarkerFileRow">
+                        <div class="col-25">
+                            <label for="addMarkerName">Image:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="file" name="file" onchange="showNSFW(this);">
+                        </div>
+                    </div>
+
+                    <div class="row" id="addMarkerNsfwRow">
+                        <div class="col-25">
+                            <label for="addMarkerNsfw">NSFW:</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="addMarkerNsfw" type="checkbox" name="nsfw">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <textarea id="addMarkerText" name="text" rows="7" cols="40" maxlength="280" placeholder="Something about yourself" required ></textarea>
+                        <!-- <div class="col-25">
+                            <label for="addMarkerText">Test:</label>
+                        </div>
+                        <div class="col-75">
+                            <textarea id="addMarkerText" name="text" rows="7" cols="40" maxlength="280" placeholder="Something about yourself" required ></textarea>
+                        </div> -->
+                    </div>
+
+                    <div class="row">
+                        <input type="submit" value="Submit"><br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
