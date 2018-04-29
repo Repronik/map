@@ -10,7 +10,7 @@ input[type=text], input[type=checkbox], select, textarea {
 }
 
 label {
-    padding: 12px 12px 12px 0;
+    /*padding: 12px 12px 12px 0;*/
     display: inline-block;
 }
 
@@ -29,18 +29,6 @@ input[type=submit]:hover {
     background-color: #45a049;
 }
 
-.col-25 {
-    float: left;
-    width: 25%;
-    margin-top: 6px;
-}
-
-.col-75 {
-    float: left;
-    width: 75%;
-    margin-top: 6px;
-}
-
 .row:after {
     content: "";
     display: table;
@@ -56,12 +44,21 @@ input[type=submit]:hover {
     width: 100vw;
     z-index: 20;
     background-color: #ffffff;
-    height: 60vh;
+    /*height: 60vh;*/
     overflow: hidden;
 }
 
 .mobileBottom input{
     height: 70px;
+}
+
+.mobileBottom input[type=checkbox] {
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(5); /* IE */
+    -moz-transform: scale(5); /* FF */
+    -webkit-transform: scale(5); /* Safari and Chrome */
+    -o-transform: scale(5); /* Opera */
+    margin: 35px;
 }
 
 .mobileBottom input, .mobileBottom input[type=file], .mobileBottom select, .mobileBottom textarea {
@@ -72,7 +69,7 @@ input[type=submit]:hover {
     height: 85px;
 }
 
-.mobileBottom input, .mobileBottom textarea, .mobileBottom label {
+.mobileBottom, .mobileBottom input, .mobileBottom textarea {
     font-size: 50px;
     line-height: 1.3333;
 }
@@ -91,7 +88,24 @@ input[type=submit]:hover {
     box-sizing: border-box;
 }
 
+.blocks {
+    display: inline-block;
+}
 
+.mobileBottom #edit, .mobileBottom #accept, .mobileBottom #reject{
+    height: 150px;
+    width: 300px;
+    font-size: 80px;
+}
+
+
+.mobileBottom #markerText {
+    padding-top: 50px;
+}
+
+#markerText {
+    padding-top: 10px;
+}
 
 
 
@@ -143,6 +157,15 @@ input[type=submit]:hover {
     top: 10px;
     right: 10px;
 }
+#add-marker[value="Add marker"].mobile {
+    background-color: #45a049;
+    height: 150px;
+}
+#add-marker[value="Cancel adding marker"].mobile {
+    background-color: #a04549;
+    height: 150px;
+}
+
 
 #Marker-content {
     -webkit-touch-callout: default;
@@ -190,4 +213,8 @@ input[type=submit]:hover {
 }
 #edit {
     background-color: #FFCC66;
+}
+
+#MobileAddMarker, #MobileMarker {
+    display: none;
 }

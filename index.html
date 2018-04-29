@@ -22,33 +22,29 @@
         <div id="MobileAddMarker" class="ol-popup">Adding Marker</div>
 
         <div id="Marker" class="ol-popup">
-            <div id="Marker-content">
-                <table>
-                    <tr>
-                       <td rowspan="5">
-                            <img src="/resources/images/nsfw.png" id="nsfwOverlay" onclick="showImg(this);">
-                            <img src="" id="markerPhoto">
-                       </td> 
-                    </tr>
-                    <tr>
-                        <td>Name:</td>
-                        <td id="markerName" colspan="2"></td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td id="markerEmail" colspan="2"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" id="markerText"></td>
-                    </tr>
-                    <tr id="judgeButtons">
-                        <td colspan="3">
-                            <button id="accept" onclick="procesMarker(this);" >ACCEPT</button>
-                            <button id="edit" onclick="procesMarker(this);" >EDIT</button>
-                            <button id="reject" onclick="procesMarker(this);" >REJECT</button>
-                        </td>
-                    </tr>
-                </table>
+            <div class="blocks">
+                <img src="/resources/images/nsfw.png" id="nsfwOverlay" onclick="showImg(this);">
+                <img src="" id="markerPhoto">
+            </div>
+            <div class="blocks">
+                <div class="row">
+                    <div class="blocks">
+                        <label for="markerName">Name:</label>
+                    </div>
+                    <div id="markerName" class="blocks"></div>
+                </div>
+                <div class="row">
+                    <div class="blocks">
+                        <label for="markerEmail">Email:</label>
+                    </div>
+                    <div id="markerEmail" class="blocks"></div>
+                </div>
+                <div id="markerText" class="row"></div>
+                <div id="judgeButtons" class="row">
+                    <button id="accept" onclick="procesMarker(this);" >ACCEPT</button>
+                    <button id="edit" onclick="procesMarker(this);" >EDIT</button>
+                    <button id="reject" onclick="procesMarker(this);" >REJECT</button>
+                </div>
             </div>
         </div>
 
@@ -59,49 +55,43 @@
                     <input id="addMarkerEdit" type="hidden" name="edit">
 
                     <div class="row">
-                        <div class="col-25">
+                        <div class="blocks">
                             <label for="addMarkerName">Name:</label>
                         </div>
-                        <div class="col-75">
+                        <div class="blocks">
                             <input id="addMarkerName" type="text" name="name" placeholder="Name" maxlength="64" required >
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-25">
+                        <div class="blocks">
                             <label for="addMarkerEmail">Email:</label>
                         </div>
-                        <div class="col-75">
+                        <div class="blocks">
                             <input id="addMarkerEmail" type="text" name="email" placeholder="Email" maxlength="64" required >
                         </div>
                     </div>
 
                     <div class="row" id="addMarkerFileRow">
-                        <div class="col-25">
+                        <div class="blocks">
                             <label for="addMarkerName">Image:</label>
                         </div>
-                        <div class="col-75">
+                        <div class="blocks">
                             <input type="file" name="file" onchange="showNSFW(this);">
                         </div>
                     </div>
 
                     <div class="row" id="addMarkerNsfwRow">
-                        <div class="col-25">
+                        <div class="blocks">
                             <label for="addMarkerNsfw">NSFW:</label>
                         </div>
-                        <div class="col-75">
+                        <div class="blocks">
                             <input id="addMarkerNsfw" type="checkbox" name="nsfw">
                         </div>
                     </div>
 
                     <div class="row">
                         <textarea id="addMarkerText" name="text" rows="7" cols="40" maxlength="280" placeholder="Something about yourself" required ></textarea>
-                        <!-- <div class="col-25">
-                            <label for="addMarkerText">Test:</label>
-                        </div>
-                        <div class="col-75">
-                            <textarea id="addMarkerText" name="text" rows="7" cols="40" maxlength="280" placeholder="Something about yourself" required ></textarea>
-                        </div> -->
                     </div>
 
                     <div class="row">

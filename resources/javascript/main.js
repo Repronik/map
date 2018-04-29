@@ -104,11 +104,10 @@ map.on('singleclick', function(evt) {
     if (feat && feat.length == 1 && feat[0].get('features').length == 1) {
         coordinates = feat[0].getGeometry().getCoordinates();
         id = feat[0].get('features')[0].get('id');
-        view = map.getView();
-        view.setCenter(coordinates);
-        view.setZoom(10);
+        zoomtoo(coordinates, 10);
         showMarker(id, coordinates);
     } else if (adding && evt.coordinate[0] > -20037508 && evt.coordinate[0] < 20037508 && evt.coordinate[1] > -20037508 && evt.coordinate[1] < 20037508) {
+        zoomtoo(evt.coordinate, 10);
         addMarkerOverlay.setPosition(evt.coordinate);
         if (isMobile()) {
             document.getElementById('addMarker').style.display = 'block';
@@ -118,7 +117,7 @@ map.on('singleclick', function(evt) {
         addMarkerOverlay.setPosition(undefined);
         if (isMobile()) {
             document.getElementById('addMarker').style.display = 'none';
-            document.getElementById('Marker').style.display = 'block'
+            document.getElementById('Marker').style.display = 'none';
         }
     }
 });
@@ -168,7 +167,18 @@ function adminMarkers(button) {
 }
 
 
-
+function zoomtoo(coordinates, zoom) {
+    view = map.getView();
+    if (isMobile()) {
+        tempCoordinates = [];
+        tempCoordinates[0] = coordinates[0];
+        tempCoordinates[1] = coordinates[1] - 70000;
+        view.setCenter(tempCoordinates);
+    } else {
+        view.setCenter(coordinates);
+    }
+    view.setZoom(zoom);
+}
 
 function showMarker(id, pos) {
     document.getElementById("addMarkerNsfwRow").style.display = 'none';
@@ -191,7 +201,8 @@ function showMarker(id, pos) {
             MarkerOverlay.setPosition(pos);
             MarkerOverlay.id = id;
             if (isMobile()) {
-                document.getElementById('Marker').style.display = 'block'
+                document.getElementById('Marker').style.display = 'block';
+                document.getElementById('addMarker').style.display = 'none';
             }
         }
     };
@@ -289,8 +300,15 @@ function procesMarker(button) {
 
             addMarkerOverlay.setPosition(MarkerOverlay.getPosition());
             MarkerOverlay.setPosition(undefined);
+            if (isMobile()) {
+                document.getElementById('addMarker').style.display = 'block';
+                document.getElementById('Marker').style.display = 'none';
+            }
         } else {
             MarkerOverlay.setPosition(undefined);
+            if (isMobile()) {
+                document.getElementById('Marker').style.display = 'none';
+            }
             // MarkerCloser.blur();
 
             if (button.id == 'accept') {
@@ -438,18 +456,30 @@ function checkForm() {
 }
 
 function main() {
+    if (isMobile()) {
+        document.getElementById('MobileMarker').appendChild(document.getElementById('nsfwOverlay').parentElement);
+    }    
+
     loadMarkers();
     map.set('target', 'map');
 
     if (isMobile()) {
+        add_Marker = document.getElementById('add-marker');
+        add_Marker.className = 'mobile';
+
         addMarker = document.getElementById('addMarker');
         addMarker.className = 'mobileBottom';
 
         marker = document.getElementById('Marker');
         marker.className = 'mobileBottom';
 
-        addMarkerOverlay.set('element', document.getElementById('MobileAddMarker'));
-        MarkerOverlay.set('element', document.getElementById('MobileMarker'));
+        MobileAddMarker = document.getElementById('MobileAddMarker');
+        addMarkerOverlay.set('element', MobileAddMarker);
+        MobileAddMarker.style.display = 'block';
+
+        MobileMarker = document.getElementById('MobileMarker');
+        MarkerOverlay.set('element', MobileMarker);
+        MobileMarker.style.display = 'block';
 
     } else {
         addMarkerOverlay.set('element', document.getElementById('addMarker'));
