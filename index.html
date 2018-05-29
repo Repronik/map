@@ -17,6 +17,8 @@
             <input class="adminButton" type="button" command="2" value="show aproved" onclick="adminMarkers(this);">
             <input class="adminButton" type="button" command="1" value="show rejected" onclick="adminMarkers(this);" >
         </div>
+        <div id="ViewCenter"></div>
+        <div id="scaleLine" onclick="changeUnit();"></div>
 
         <div id="MobileMarker" class="ol-popup"></div>
         <div id="MobileAddMarker" class="ol-popup">Adding Marker</div>
@@ -45,6 +47,9 @@
                     <button id="edit" onclick="procesMarker(this);" >EDIT</button>
                     <button id="reject" onclick="procesMarker(this);" >REJECT</button>
                 </div>
+                <div class="row" id="useredit">
+                    <input type="submit" value="Edit" onclick="useredit(this)"><br>
+                </div>
             </div>
         </div>
 
@@ -53,6 +58,8 @@
                 <form name="addMarker-form" method="POST" action="addMarker.php" enctype="multipart/form-data" onsubmit="checkForm();return false;">
                     <input type="hidden" name="pos">
                     <input id="addMarkerEdit" type="hidden" name="edit">
+                    <!-- <input id="addMarkerRemoveImage" type="hidden" name="removeImage"> -->
+                    <!-- <input id="addMarkerUserEdit" type="hidden" name="useredit"> -->
 
                     <div class="row">
                         <div class="blocks">
@@ -77,7 +84,7 @@
                             <label for="addMarkerName">Image:</label>
                         </div>
                         <div class="blocks">
-                            <input type="file" name="file" onchange="showNSFW(this);">
+                            <input id="addMarkerFile" type="file" name="file" onchange="showNSFW(this);">
                         </div>
                     </div>
 
@@ -89,9 +96,30 @@
                             <input id="addMarkerNsfw" type="checkbox" name="nsfw">
                         </div>
                     </div>
+                    <div class="row" id="addMarkerRemoveImageRow">
+                        <input type="button" id="addMarkerRemoveImage" value="remove image" onclick="removeimage(this);">
+                    </div>
 
                     <div class="row">
                         <textarea id="addMarkerText" name="text" rows="7" cols="40" maxlength="280" placeholder="Something about yourself" required ></textarea>
+                    </div>
+
+                    <div class="row" id="addMarkerCaptcha">
+                        <div class="blocks">
+                            <img id="captcha" src="/captcha.php">
+                        </div>
+                        <div class="blocks">
+                            <input type="text" name="captcha" placeholder="Captcha" maxlength="5" style="width: 10ch" required >
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="blocks">
+                            <label for="addMarkerPassword">Password:</label>
+                        </div>
+                        <div class="blocks">
+                            <input id="addMarkerPassword" type="text" name="password" minlength="8" maxlength="64" required >
+                        </div>
                     </div>
 
                     <div class="row">
@@ -100,5 +128,6 @@
                 </form>
             </div>
         </div>
+        <div id="InfoOverlay" class="ol-popup">request had been send to the admin<br/>your pin wil apear when aproved</div>
     </body>
 </html>

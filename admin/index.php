@@ -3,7 +3,6 @@
 session_start();
 $ip_hash = hash('md5', $_SERVER['REMOTE_ADDR'].'112233445566778899');
 
-
 $servername = 'localhost';
 $username = 'cuteboy';
 $password = 'uBIng01S7FuDvid6';
@@ -13,8 +12,6 @@ $dbConn = new mysqli($servername, $username, $password, $dbname, 3306);
 if ($dbConn->connect_error) {
     die('Connection DB failed');
 }
-
-
 // var_dump(password_hash('1234', PASSWORD_BCRYPT));
 
 if (array_key_exists('username', $_POST) && array_key_exists('password', $_POST)) {
@@ -38,7 +35,7 @@ if (array_key_exists('username', $_POST) && array_key_exists('password', $_POST)
 if (array_key_exists('logout', $_GET)) {
     unset($_SESSION['admin']);
     setcookie("isAdmin", false, time() - 3600, '/');
-    header('Location: https://cuteboy.world');
+    header('Location: https://'.$_SERVER['SERVER_NAME']);
     exit();
 }
 
@@ -46,7 +43,7 @@ if (array_key_exists('logout', $_GET)) {
 if (array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == $ip_hash) {
     echo '<a href="?logout">logout</a></br>';
 
-    foreach (scandir('/srv/http/cuteboy.world/images') as $img) {
+    foreach (scandir($_SERVER["DOCUMENT_ROOT"].'/images') as $img) {
         if ($img != '.' && $img != '..') {
             echo '<img src="/images/'.$img.'"></br>'.$img.'<br><br>';
         }

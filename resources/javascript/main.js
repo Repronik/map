@@ -20,6 +20,17 @@ if (cookies.isAdmin == '1') {
     xhttp.send();
 }
 
+// localStorage.clear();
+
+if (localStorage['password'] == undefined) {
+    localStorage['password'] = generatePassword();
+}
+
+if (localStorage['hasMarker'] == undefined) {
+    localStorage['hasMarker'] = 1;
+}
+
+console.log(localStorage);
 
 styleCache = {};
 var clusters = new ol.layer.Vector({
@@ -80,6 +91,14 @@ var MarkerOverlay = new ol.Overlay({
     }
 });
 
+var InfoOverlay = new ol.Overlay({
+    // element: document.getElementById('Marker'),
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250
+    }
+});
+
 var openSteetMapLayer = new ol.layer.Tile({
     source: new ol.source.OSM({
         attributions: ['for suport or sugestions mail cuteboyworld@outlook.com'],
@@ -87,31 +106,32 @@ var openSteetMapLayer = new ol.layer.Tile({
     }),
 });
 
-var controls = ol.control.defaults({rotate: false}); 
+var controls = ol.control.defaults({rotate: false});
 var interactions = ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false});
 
 var map = new ol.Map({
     layers: [ openSteetMapLayer, clusters ],
-    overlays: [addMarkerOverlay, MarkerOverlay],
+    overlays: [addMarkerOverlay, MarkerOverlay, InfoOverlay],
     view: view,
     controls: controls,
     interactions: interactions
 });
 
+// var scaleline = new ol.Control.ScaleLine();
+// map.addControl(scaleline);
 
 map.on('singleclick', function(evt) {
     feat = map.getFeaturesAtPixel(evt.pixel);
     if (feat && feat.length == 1 && feat[0].get('features').length == 1) {
         coordinates = feat[0].getGeometry().getCoordinates();
         id = feat[0].get('features')[0].get('id');
-        zoomtoo(coordinates, 10);
         showMarker(id, coordinates);
     } else if (adding && evt.coordinate[0] > -20037508 && evt.coordinate[0] < 20037508 && evt.coordinate[1] > -20037508 && evt.coordinate[1] < 20037508) {
-        zoomtoo(evt.coordinate, 10);
         addMarkerOverlay.setPosition(evt.coordinate);
         if (isMobile()) {
             document.getElementById('addMarker').style.display = 'block';
         }
+        zoomtoo(evt.coordinate, 10);
     } else {
         MarkerOverlay.setPosition(undefined);
         addMarkerOverlay.setPosition(undefined);
@@ -122,15 +142,40 @@ map.on('singleclick', function(evt) {
     }
 });
 
+function generatePassword() {
+    for (var t = "", e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", i = 0; 8 > i; i++) {
+        var n = Math.floor(Math.random() * e.length)
+        t += e.substring(n, n + 1)
+    }
+    return t
+}
+
+function changeUnit() {
+    if (scaleLineControl.getUnits() == "metric") {
+        scaleLineControl.setUnits("us");
+    } else {
+        scaleLineControl.setUnits("metric");
+    }
+}
+
 function showImg() {
     document.getElementById("nsfwOverlay").style.display = 'none';
     document.getElementById("markerPhoto").style.display = 'block';
 }
+
+function removeimage(button) {
+    input = document.getElementById('addMarkerFile');
+    input.value = '';
+    showNSFW(input);
+}
+
 function showNSFW(input) {
     if (input.value == '') {
         document.getElementById("addMarkerNsfwRow").style.display = 'none';
+        document.getElementById("addMarkerRemoveImageRow").style.display = 'none';
     } else {
         document.getElementById("addMarkerNsfwRow").style.display = 'table-row';
+        document.getElementById("addMarkerRemoveImageRow").style.display = 'block';
     }
 }
 
@@ -140,6 +185,16 @@ function setAdmin(bool) {
         document.getElementById('adminCommands').style.display = 'block';
         document.getElementById('add-marker').style.display = 'none';
         document.getElementById('judgeButtons').style.display = 'table-row';
+        document.getElementById('ViewCenter').style.display = 'block';
+
+        view.on('propertychange', function(e) {
+            if (e.key == "center") {
+                center = this.getCenter();
+                center[0] = Math.round(center[0]);
+                center[1] = Math.round(center[1]);
+                document.getElementById('ViewCenter').innerHTML = JSON.stringify(center);
+            }
+        });
     }
 }
 
@@ -177,12 +232,20 @@ function zoomtoo(coordinates, zoom) {
     } else {
         view.setCenter(coordinates);
     }
-    view.setZoom(zoom);
+    if (view.getZoom() < 10) {
+        view.setZoom(10);
+    }
 }
 
 function showMarker(id, pos) {
     document.getElementById("addMarkerNsfwRow").style.display = 'none';
     document.getElementById('markerPhoto').src = '';
+
+    if (id == localStorage['marker']) {
+        document.getElementById('useredit').style.display = 'block';
+    } else {
+        document.getElementById('useredit').style.display = 'none';
+    }
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -204,6 +267,7 @@ function showMarker(id, pos) {
                 document.getElementById('Marker').style.display = 'block';
                 document.getElementById('addMarker').style.display = 'none';
             }
+            zoomtoo(coordinates, 10);
         }
     };
     xhttp.open("GET", "getMarkers.php?id="+id, true);
@@ -261,6 +325,40 @@ function isMobile() {
     return check;
 }
 
+function useredit() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            response = JSON.parse(this.responseText);
+            if (response['nsfw'] == '1') {
+                document.getElementById("addMarkerNsfw").checked = true;
+            } else {
+                document.getElementById("addMarkerNsfw").checked = false;
+            }
+            if (response['photo']) {
+                document.getElementById("addMarkerNsfwRow").style.display = 'table-row';
+                document.getElementById("addMarkerRemoveImageRow").style.display = 'block';
+            }
+            document.getElementById('addMarkerName').value = response['name'];
+            document.getElementById('addMarkerEmail').value = response['email'];
+            document.getElementById('addMarkerText').value = response['text'].replace(/<br\s*\/?>/mg,"");
+            document.getElementById('addMarkerEdit').value = MarkerOverlay.id;
+            // document.getElementById('addMarkerUserEdit').value = 1;
+        }
+    };
+    xhttp.open("GET", "getMarkers.php?id="+MarkerOverlay.id, true);
+    xhttp.send();
+
+
+    addMarkerOverlay.setPosition(MarkerOverlay.getPosition());
+    MarkerOverlay.setPosition(undefined);
+    if (isMobile()) {
+        document.getElementById('addMarker').style.display = 'block';
+        document.getElementById('Marker').style.display = 'none';
+    }
+    return false;
+}
+
 function procesMarker(button) {
     if (isAdmin) {
         if (button.id == 'edit') {
@@ -272,9 +370,11 @@ function procesMarker(button) {
 
                     if (response['photo']) {
                         document.getElementById("addMarkerNsfwRow").style.display = 'table-row';
+                        document.getElementById("addMarkerRemoveImageRow").style.display = 'block';
                         // document.getElementById('markerPhoto').src = '/images/'+response['photo'];
                     } else {
                         document.getElementById("addMarkerNsfwRow").style.display = 'none';
+                        document.getElementById("addMarkerRemoveImageRow").style.display = 'none';
                         // document.getElementById('markerPhoto').src = '';
                     }
 
@@ -330,8 +430,7 @@ function checkForm() {
     form = document.forms['addMarker-form'];
     error = false;
 
-    if (!(form['edit'].value > '' && isAdmin)) {
-
+    if (form['edit'].value > '' && !isAdmin) {
         if (form['file'].files.length > 0 ) {
             if (form['file'].files[0].size > 2097152) {
                 td = form['file'].parentElement;
@@ -409,6 +508,22 @@ function checkForm() {
         error = true;
     }
 
+    if (form['password'].value.length < 8) {
+        td = form['password'].parentElement;
+        strong = document.createElement('strong');
+        strong.className = 'form-error';
+        strong.innerHTML = 'Needs to be 8 or more characters';
+        td.appendChild(strong);
+        error = true;
+    } else if (form['password'].value.length > 64) {
+        td = form['password'].parentElement;
+        strong = document.createElement('strong');
+        strong.className = 'form-error';
+        strong.innerHTML = 'Thats Too long';
+        td.appendChild(strong);
+        error = true;
+    }
+
     if (error) {
         return false;
     }
@@ -436,19 +551,21 @@ function checkForm() {
                     strong.innerHTML = response['errors'][key];
                     td.appendChild(strong);
                 }
-                document.getElementById('captcha').src = "/captcha.php?t=" + new Date().getTime();
             } else {
-                if (form['edit'].value != '' && isAdmin) {
+                if (form['edit'].value != '') {
                     addMarkerOverlay.setPosition(undefined);
                     showMarker(form['edit'].value, pos);
                 } else {
-                    content = document.getElementById('addMarker-content');
-                    content.innerHTML = '<div style="width: 34ch">request had been send to the admin<br/>your pin wil apear when aproved</div>';
-                    button = document.getElementById('add-marker');
-                    button.parentElement.removeChild(button);
+                    InfoOverlay.setPosition(addMarkerOverlay.getPosition());
+                    addMarkerOverlay.setPosition(undefined);
+
+                    button = document.getElementById('add-marker').style.display = 'none';
                     adding = false;
+                    localStorage['hasMarker'] = 1;
+                    localStorage['marker'] = response['id'];
                 }
             }
+            document.getElementById('captcha').src = "/captcha.php?t=" + new Date().getTime();
         }
     }
     http.send(params);
@@ -484,6 +601,17 @@ function main() {
     } else {
         addMarkerOverlay.set('element', document.getElementById('addMarker'));
         MarkerOverlay.set('element', document.getElementById('Marker'));
+        InfoOverlay.set('element', document.getElementById('InfoOverlay'));
     }
+
+    scaleLineControl = new ol.control.ScaleLine({target: document.getElementById('scaleLine')});
+    controls.extend([scaleLineControl]);
+    document.getElementById('addMarkerPassword').value = localStorage['password'];
+
+
+    if (localStorage['hasMarker'] == '1') {
+        button = document.getElementById('add-marker').style.display = 'none';
+    }
+
 }
 document.addEventListener('DOMContentLoaded', main, false);
