@@ -101,7 +101,7 @@ var InfoOverlay = new ol.Overlay({
 
 var openSteetMapLayer = new ol.layer.Tile({
     source: new ol.source.OSM({
-        attributions: ['for suport or sugestions mail cuteboyworld@outlook.com'],
+        attributions: ['for suport or sugestions mail info (at) repronik.it'],
         wrapX: false
     }),
 });
